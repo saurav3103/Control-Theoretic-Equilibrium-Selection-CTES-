@@ -1,4 +1,4 @@
-# CTES-framework
+# ctes-framework
 
 **Control-Theoretic Equilibrium Selection (CTES)** — a novel framework that repurposes LQR optimal control theory as a global optimization proxy. Given a multimodal nonlinear function with multiple local minima, CTES uses the solution to the Algebraic Riccati Equation (ARE) at each equilibrium to rank candidate solutions and identify the global minimum.
 
@@ -41,22 +41,67 @@ ctes-framework/
 
 ---
 
-## Files
+## Results
 
-### `lqr_optim_v4_gaussian.m`
-1D optimization on a 5-well Gaussian landscape where the global minimum is **not** the stiffest well. Introduces the flipped proxy −P (fixing the sign inversion from v3). Achieves ρ = 1.0.
+### v4 — 1D Gaussian Wells (Proxy = −P, Q = |f(x\*)| × H)
 
-### `lqr_optim_v5_2d.m`
-Extends the framework to 2D scalar functions f(x₁, x₂). Hessian is now a 2×2 matrix; proxy is −trace(P). Demonstrates the approach scales to vector state spaces.
+5-well test function where the global minimum is **not** the stiffest well. −P correctly identifies the deepest well with perfect Spearman ρ = 1.000.
 
-### `lqr_optim_v7_rastrigin.m`
-Stress test on the Rastrigin function (f ≥ 0 everywhere, 10+ local minima on [−5, 5]). Uses an inverted Q encoding: Q = 1/(|f(x\*)| + ε) · H so that the global minimum (f ≈ 0) receives the largest Q.
+![v4 results](Results/v4_gaussian.png)
 
-### `lqr_optim_v8_unified.m`
-Unifies v4 and v7 into a single sign-agnostic formula using normalized range depth. Runs both test classes back-to-back and confirms ρ > 0.99 on each. **This is the recommended starting point.**
+---
 
-### `ctes_3link_robot.m`
-Applies the CTES framework to inverse kinematics equilibrium selection for a 3-link planar robot arm. Multiple IK solutions exist for a given end-effector target; CTES selects the energetically optimal configuration. Includes PD controller simulation and animation.
+### v5 — 2D Extension (Proxy = −trace(P))
+
+Extends the framework to 2D scalar functions f(x₁, x₂) with a 2×2 Hessian. −trace(P) maintains perfect rank correlation in the higher-dimensional landscape.
+
+![v5 results](Results/v5_2d.png)
+
+---
+
+### v7 — Rastrigin Stress Test (Q = 1/(|f − f_ref| + ε) · H)
+
+11-well Rastrigin function on [−5, 5] where f ≥ 0 everywhere. Uses an inverted encoding so the global minimum (f ≈ 0) receives the largest Q. Achieves ρ = 1.000.
+
+![v7 results](Results/v7_rastrigin.png)
+
+---
+
+### v8 — Unified Formula (depth = (f_max − f) / (f_max − f_min + ε))
+
+Single sign-agnostic encoding tested on both Gaussian and Rastrigin simultaneously. Both achieve ρ = 1.0000 — the unified formula works across function classes.
+
+![v8 results](Results/v8_unified.png)
+
+---
+
+### CTES Robot Application — 3-Link Planar Arm IK Selection
+
+Multiple IK solutions exist for target (x, y) = (1.5, 0.5). CTES selects the energetically optimal configuration (green) from ~60 candidates. The arm converges to the selected equilibrium under PD control in simulation.
+
+**Workspace — all IK solutions (green = CTES-selected):**
+
+![Robot workspace](Results/robot_workspace.png)
+
+**CTES energy bar chart — green bar is selected solution:**
+
+![CTES selection](Results/robot_ctes_selection.png)
+
+**PD controller simulation at t = 10s:**
+
+![Robot simulation](Results/robot_simulation.png)
+
+---
+
+## Summary Table
+
+| Script | Function Class | Wells | Spearman ρ | Global Correct |
+|--------|---------------|-------|------------|----------------|
+| v4 | 5-well Gaussian (1D) | 5 | 1.0000 | ✓ |
+| v5 | 5-well Gaussian (2D) | 5 | 1.0000 | ✓ |
+| v7 | Rastrigin (Fix 3) | 11 | 1.0000 | ✓ |
+| v8 | Gaussian + Rastrigin (unified) | 5 + 11 | 1.0000 | ✓ |
+| CTES Robot | 3-link IK selection | ~60 | — | ✓ |
 
 ---
 
@@ -65,18 +110,6 @@ Applies the CTES framework to inverse kinematics equilibrium selection for a 3-l
 - MATLAB R2019b or later
 - Control System Toolbox (for `care`)
 - No additional toolboxes required for v4/v5/v7/v8
-
----
-
-## Results Summary
-
-| Script | Function Class | Spearman ρ | Global Correct |
-|--------|---------------|------------|----------------|
-| v4 | 5-well Gaussian (1D) | 1.0000 | ✓ |
-| v5 | 5-well Gaussian (2D) | 1.0000 | ✓ |
-| v7 | Rastrigin (Fix 3) | >0.95 | ✓ |
-| v8 | Gaussian + Rastrigin (unified) | >0.99 | ✓ |
-| CTES Robot | 3-link IK selection | — | ✓ |
 
 ---
 
@@ -90,6 +123,12 @@ This connects to ideas in:
 - Lyapunov stability theory (P as a Lyapunov matrix)
 - LQR as an energy minimization problem
 - Basin geometry in dynamical systems
+
+---
+
+## Related Work
+
+This framework is being developed into a full paper (co-authored with Dr. Amit Agarwal, VNIT ECE) for IEEE conference submission. A related thread with Prof. Tamas Keviczky (DCSC, TU Delft) discusses connections to the N4CI group's work on systems and control.
 
 ---
 
