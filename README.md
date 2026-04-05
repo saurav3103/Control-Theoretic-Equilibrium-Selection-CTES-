@@ -124,11 +124,6 @@ This connects to ideas in:
 - LQR as an energy minimization problem
 - Basin geometry in dynamical systems
 
----
-
-## Related Work
-
-This framework is being developed into a full paper (co-authored with Dr. Amit Agarwal, VNIT ECE) for IEEE conference submission. A related thread with Prof. Tamas Keviczky (DCSC, TU Delft) discusses connections to the N4CI group's work on systems and control.
 
 ---
 
