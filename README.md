@@ -1,4 +1,4 @@
-# ctes-framework
+# CTES-framework
 
 **Control-Theoretic Equilibrium Selection (CTES)** — a novel framework that repurposes LQR optimal control theory as a global optimization proxy. Given a multimodal nonlinear function with multiple local minima, CTES uses the solution to the Algebraic Riccati Equation (ARE) at each equilibrium to rank candidate solutions and identify the global minimum.
 
